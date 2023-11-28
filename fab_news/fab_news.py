@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
@@ -39,6 +40,7 @@ def get_old_hash(url):
 
 def store_new_hash(url, new_hash, articles={}):
     """Store to cache (local disk) the supplied hash and article payload."""
+    Path(".cache/").mkdir(parents=True, exist_ok=True)
     hash_file = ".cache/" + hashlib.md5(url.encode('utf-8')).hexdigest() + ".yml"
     context = {"hash": new_hash, "articles": articles}
     with open(hash_file, 'w') as file:
