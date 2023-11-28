@@ -1,8 +1,8 @@
+"""Main Fab News Module."""
+
 import hashlib
 import json
 import os
-from datetime import datetime
-from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -14,6 +14,7 @@ extractor = URLExtract()
 
 
 def get_data(url):
+    """Return a soup object representing the page at `url`."""
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -21,10 +22,12 @@ def get_data(url):
 
 
 def compute_hash(data):
+    """Return the hash for the supplied payload."""
     return hashlib.md5(data.encode('utf-8')).hexdigest()
 
 
 def get_old_hash(url):
+    """Return the dict containing the cached hash and article payload for the given URL."""
     hash_file = ".cache/" + hashlib.md5(url.encode('utf-8')).hexdigest() + ".yml"
     if os.path.exists(hash_file):
         with open(hash_file, 'r') as file:
@@ -35,6 +38,7 @@ def get_old_hash(url):
 
 
 def store_new_hash(url, new_hash, articles={}):
+    """Store to cache (local disk) the supplied hash and article payload."""
     hash_file = ".cache/" + hashlib.md5(url.encode('utf-8')).hexdigest() + ".yml"
     context = {"hash": new_hash, "articles": articles}
     with open(hash_file, 'w') as file:
@@ -42,6 +46,7 @@ def store_new_hash(url, new_hash, articles={}):
 
 
 def get_article_dict(soup):
+    """Return a dict of articles from the supplied `soup` output."""
     articles = soup.findAll(class_='listblock-item')
 
     articles_dict = {}
@@ -62,6 +67,7 @@ def get_article_dict(soup):
 
 
 def articles(url="", webhook_url=""):
+    """Check for Article update and post results if true."""
     old_hash = get_old_hash(url)
     new_data = get_data(url)
     new_hash = compute_hash(new_data)
@@ -88,6 +94,7 @@ def articles(url="", webhook_url=""):
 
 
 def living_legend(url="", webhook_url=""):
+    """Check for Living Legend update and post result if true."""
     old_hash = get_old_hash(url)
     new_data = get_data(url)
     new_hash = compute_hash(new_data)
@@ -105,13 +112,13 @@ def living_legend(url="", webhook_url=""):
 
 
 def check_news(webhook=""):
-    """Simple tool to check fabtcg.com for new articles and updates"""
+    """Simple tool to check fabtcg.com for new articles and updates."""
     urls = ["https://fabtcg.com/resources/rules-and-policy-center/living-legend/"]
     articles_urls = ["https://fabtcg.com/articles/", "https://fabtcg.com/retailer-news/"]
     for url in articles_urls:
-        articles(url)
+        articles(url, webhook)
     for url in urls:
-        living_legend(url)
+        living_legend(url, webhook)
 
 
 if __name__ == '__main__':

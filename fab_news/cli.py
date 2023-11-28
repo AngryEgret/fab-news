@@ -8,7 +8,7 @@ from fab_news.fab_news import check_news
 
 
 @click.command()
-@click.option('--webhook', default="", help='Discord Webhook URL')
+@click.option('--webhook', default="https://discord.com/api/webhooks/1234", help='Discord Webhook URL')
 def main(webhook):
     """Main entrypoint."""
     click.echo(f'{datetime.now()} - Checking ...')
