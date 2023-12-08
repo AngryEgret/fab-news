@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "fab-news"
-version = "0.1.0"
+version = "0.1.1"
 homepage = "https://github.com/AngryEgret/fab-news"
 description = "Publish Flesh and Blood News to Discord"
 authors = ["Ryan Greget <rgreget@gmail.com>"]
