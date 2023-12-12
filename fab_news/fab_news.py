@@ -108,7 +108,9 @@ def living_legend(url="", webhook_url=""):
             webhook = DiscordWebhook(url=webhook_url)
             embed = DiscordEmbed(title="Living Legend Update!", description=url)
             embed.set_url(url)
-            embed.set_image("https://dhhim4ltzu1pj.cloudfront.net/media/images/logo_lss_stroke_white_780.width-10000.png")
+            embed.set_image(
+                "https://dhhim4ltzu1pj.cloudfront.net/media/images/logo_lss_stroke_white_780.width-10000.png"
+            )
             webhook.add_embed(embed)
             webhook.execute()
             ic(old_hash)
@@ -119,7 +121,7 @@ def living_legend(url="", webhook_url=""):
 def check_news(webhook=""):
     """Simple tool to check fabtcg.com for new articles and updates."""
     urls = ["https://fabtcg.com/resources/rules-and-policy-center/living-legend/"]
-    articles_urls = ["https://fabtcg.com/articles/", "https://fabtcg.com/retailer-news/"]
+    articles_urls = ["https://fabtcg.com/retailer-news/"]
     for url in articles_urls:
         articles(url, webhook)
     for url in urls:
