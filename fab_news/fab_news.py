@@ -102,15 +102,18 @@ def living_legend(url="", webhook_url=""):
     new_hash = compute_hash(new_data)
 
     if old_hash["hash"] == "" or old_hash["hash"] != new_hash:
-        webhook = DiscordWebhook(url=webhook_url)
-        embed = DiscordEmbed(title="Living Legend Update!", description=url)
-        embed.set_url(url)
-        embed.set_image("https://dhhim4ltzu1pj.cloudfront.net/media/images/logo_lss_stroke_white_780.width-10000.png")
-        webhook.add_embed(embed)
-        webhook.execute()
-        ic(old_hash)
-        ic(new_hash)
-        store_new_hash(url, new_hash)
+        articles = new_data.findAll("caption")
+
+        if set(old_hash["articles"]) != set(articles):
+            webhook = DiscordWebhook(url=webhook_url)
+            embed = DiscordEmbed(title="Living Legend Update!", description=url)
+            embed.set_url(url)
+            embed.set_image("https://dhhim4ltzu1pj.cloudfront.net/media/images/logo_lss_stroke_white_780.width-10000.png")
+            webhook.add_embed(embed)
+            webhook.execute()
+            ic(old_hash)
+            ic(new_hash)
+            store_new_hash(url, new_hash, articles)
 
 
 def check_news(webhook=""):
