@@ -104,7 +104,16 @@ def living_legend(url="", webhook_url=""):
     if old_hash["hash"] == "" or old_hash["hash"] != new_hash:
         articles = new_data.findAll("caption")
 
-        if set(old_hash["articles"]) != set(articles):
+        articles_dict = {}
+
+        for i in articles:
+            title = i.string
+            url = url
+            image = ""
+
+            articles_dict[title] = {"title": title, "url": url, "image": image}
+
+        if set(old_hash["articles"]) != set(articles_dict):
             webhook = DiscordWebhook(url=webhook_url)
             embed = DiscordEmbed(title="Living Legend Update!", description=url)
             embed.set_url(url)
@@ -113,9 +122,7 @@ def living_legend(url="", webhook_url=""):
             )
             webhook.add_embed(embed)
             webhook.execute()
-            ic(old_hash)
-            ic(new_hash)
-            store_new_hash(url, new_hash, articles)
+            store_new_hash(url, new_hash, articles_dict)
 
 
 def check_news(webhook=""):
