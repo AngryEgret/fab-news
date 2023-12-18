@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Tests for `fab_news` package."""
 
+from icecream import ic
 import pytest
 
 from fab_news import fab_news
@@ -9,17 +10,25 @@ from fab_news import fab_news
 @pytest.fixture
 def article_response():
     """Article Response Fixture."""
+    from bs4 import BeautifulSoup
     import requests
 
-    return requests.get('https://fabtcg.com/articles/')
+    response = requests.get("https://fabtcg.com/articles/")
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    return soup
 
 
 @pytest.fixture
 def ll_response():
     """Article Response Fixture."""
+    from bs4 import BeautifulSoup
     import requests
 
-    return requests.get('https://fabtcg.com/resources/rules-and-policy-center/living-legend/')
+    response = requests.get("https://fabtcg.com/resources/rules-and-policy-center/living-legend/")
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    return soup
 
 
 def test_get_data(article_response):
@@ -61,25 +70,12 @@ def test_get_old_hash():
 #     )
 
 
-# def test_get_article_dict(soup):
-#     """Return a dict of articles from the supplied `soup` output."""
-#     articles = soup.findAll(class_='listblock-item')
-
-#     articles_dict = {}
-
-#     for i in articles:
-#         title = i.h5.string
-#         url = i.a['href']
-#         image = ""
-#         if i.img:
-#             image = i.img['src']
-#         else:
-#             urls = extractor.find_urls(i.find_next("div", class_="item-card")['style'])
-#             image = urls[0]
-
-#         articles_dict[url] = {"title": title, "url": url, "image": image}
-
-#     return articles_dict
+def test_get_article_dict(article_response):
+    """Test the get_article() method."""
+    result = fab_news.get_article_dict(article_response)
+    assert type(result) is dict
+    item = result.popitem()
+    assert list(item[1]).sort() == ["title", "url", "image"].sort()
 
 
 # def test_articles(url="", webhook_url=""):
